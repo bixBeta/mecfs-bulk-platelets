@@ -52,3 +52,5 @@ GSEAPlot(
   gene_sets = attr(test, "geneSets")["GOBP_CYTOPLASMIC_TRANSLATION"],
   gene_ranks = test@geneList
 )
+
+test = gseaRes(gse_ = gse)
