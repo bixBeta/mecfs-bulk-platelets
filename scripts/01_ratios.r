@@ -1,20 +1,33 @@
 source("scripts/packages.r")
 source("scripts/functions.r")
-load("../Platelet-4052-RNA-seq-Paired-Analysis/data/4052.dds_SARtools.RData")
+load("../../Platelet-4052-RNA-seq-Paired-Analysis/data/4052.dds_SARtools.RData")
 
 dds = out.DESeq2$dds
 
 raw.counts = counts(dds, normalized = F)
-norm.counts = counts(dds, normalized = T)
+target = target |> filter(enid != "E759" & enid != "E576")
+target
+raw.counts = raw.counts |> data.frame() |> select(all_of(target$label))
+table(target$label == colnames(raw.counts))
+
+dds = DESeqDataSetFromMatrix(
+  countData = raw.counts,
+  colData = target,
+  design = ~group
+)
+dds = DESeq(dds)
+vst = varianceStabilizingTransformation(dds, blind = T)
+plotPCA(vst, intgroup = "group")
 
 xl = extract.filter.normCounts(dds = dds)
-saveRDS(xl, "data/xl.RDS")
+saveRDS(xl, "data/xl_droppedEnids.RDS")
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-xl <- readRDS("data/xl.RDS")
+xl <- readRDS("data/xl_droppedEnids.RDS")
+
 combn.df = read.csv("data/combn.csv", header = T)
 
 
@@ -34,4 +47,4 @@ for (i in 1:nrow(combn.df)) {
   )
 }
 
-saveRDS(ratios.by.enid.list, "data/ratios_by_enid_list.RDS")
+saveRDS(ratios.by.enid.list, "data/ratios_by_enid_list_DroppedENID.RDS")

@@ -49,6 +49,7 @@ po/*~
 rsconnect/
 
 data/
+results/
 .DS_Store
 *.RDS
 

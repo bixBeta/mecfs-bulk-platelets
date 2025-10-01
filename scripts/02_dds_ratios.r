@@ -16,4 +16,21 @@ ggPcas = lapply(pca_list, function(x) {
   pluck(x, "plot")
 })
 
-cowplot::plot_grid(plotlist = ggPcas, nrow = 1)
+
+png(
+  filename = "figures/ratios_pca_dropped_enids.png",
+  width = 2920,
+  height = 2080,
+  res = 150
+)
+cowplot::plot_grid(
+  plotlist = ggPcas,
+  nrow = 2,
+  labels = c(names(ggPcas)),
+  label_size = 9,
+  hjust = -0.1,
+  vjust = 70,
+  rel_widths = 1080,
+  rel_heights = 1080
+)
+dev.off()
