@@ -1,0 +1,8 @@
+library(ggplot2)
+library(DESeq2)
+library(dplyr)
+library(tibble)
+library(scales)
+library(psych)
+library(tidyr)
+library(purrr)
